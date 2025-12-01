@@ -24,9 +24,9 @@ class Sidebar extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                child: const Center(
+                child: Center(
                   child: Text(
-                    "Operatore XYZ",
+                    currentUser?.nominativo ?? "OPERATORE",
                     style: TextStyle(color: Color(0xFFD6001C), fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),

@@ -29,9 +29,9 @@ class AppState {
   final List<String> logFeed = [];
   final List<Report> reports = [
     // some seed data
-    Report(id: '#004512', train: 'AV9403', type: 'Emergenza Medica', user: 'Sofia Bianchi', date: '25/10/2025', status: 'Aperta', severity: 'green'),
-    Report(id: '#004511', train: 'R21060', type: 'Furto', user: 'Marco Verdi', date: '24/10/2025', status: 'Pending', severity: 'orange'),
-    Report(id: '#004510', train: 'AV9668', type: 'Molestia Personale', user: 'Mario Rossi', date: '23/10/2025', status: 'Chiusa con Intervento', severity: 'red'),
+    Report(id: '#004510', train: 'AV4030', type: 'Furto', user: 'Mario Rossi', date: '2025-11-10 14:22', status: 'APERTA', severity: 'green'),
+    Report(id: '#004511', train: 'RE7894', type: 'Furto', user: 'Luigi Bianchi', date: '2025-11-10 14:22', status: 'IN CORSO', severity: 'orange'),
+    Report(id: '#004512', train: 'AV8888', type: 'Molestia Personale', user: 'Paolo Verdi', date: '2025-12-01 09:10', status: 'CONCLUSA CON INTERVENTO', severity: 'red'),
   ];
 
   AppState({required this.authService});

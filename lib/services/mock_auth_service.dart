@@ -19,14 +19,20 @@ class MockAuthService {
       email: "mattina@email.it",
       password: "123",
       nominativo: "Reperibile Mattina",
-      area: "Napoli - Garibaldi - Stazione Centrale",
+      area: "PT Campania",
     ),
     MockUser(
       email: "pomeriggio@email.it",
       password: "123",
       nominativo: "Reperibile pomeriggio",
-      area: "Roma - Tiburtina - Stazione Centrale",
+      area: "PT Lazio",
     ),
+    MockUser(
+      email: "sera@email.it",
+      password: "123",
+      nominativo: "Reperibile sera",
+      area: "PT Liguria",
+    )
   ];
 
   Future<MockUser?> signIn(String email, String password) async {

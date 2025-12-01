@@ -42,7 +42,7 @@ class _MainScaffoldState extends State<MainScaffold> {
       body: Row(
         children: [
           // Sidebar fissa sulla sinistra
-          Sidebar(selectedIndex: selectedIndex, onSelect: _onSelect),
+          Sidebar(selectedIndex: selectedIndex, onSelect: _onSelect, currentUser: widget.appState.currentUser),
 
           // Contenuto principale con stack per TopToast
           Expanded(
