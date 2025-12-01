@@ -16,15 +16,15 @@ class MockAuthService {
 
   final List<MockUser> _users = [
     MockUser(
-      email: "operatore1@polfer.it",
-      password: "1234",
-      nominativo: "Franco Ricciardi",
+      email: "mattina@email.it",
+      password: "123",
+      nominativo: "Reperibile Mattina",
       area: "Napoli - Garibaldi - Stazione Centrale",
     ),
     MockUser(
-      email: "operatore2@polfer.it",
-      password: "abcd",
-      nominativo: "Renato Zero",
+      email: "pomeriggio@email.it",
+      password: "123",
+      nominativo: "Reperibile pomeriggio",
       area: "Roma - Tiburtina - Stazione Centrale",
     ),
   ];
