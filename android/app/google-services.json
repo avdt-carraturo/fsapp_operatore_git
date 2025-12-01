@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1029128518658",
+    "project_id": "fsapp-232b7",
+    "storage_bucket": "fsapp-232b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029128518658:android:a69a2b9e4ee0b161ed3b1b",
+        "android_client_info": {
+          "package_name": "com.example.fsapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRz_8WRwEZ_OYhcDh5p93aewS5vDX7h2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029128518658:android:2d9daff892438b4eed3b1b",
+        "android_client_info": {
+          "package_name": "com.example.fsapp_polfer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRz_8WRwEZ_OYhcDh5p93aewS5vDX7h2k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
