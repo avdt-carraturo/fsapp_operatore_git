@@ -16,6 +16,7 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController tipologiaCtrl = TextEditingController();
   final TextEditingController apertaDaCtrl = TextEditingController();
   String? statoSelezionato;
+  String? tipologiaSelezionata;
 
   // Mock: risultati ricerca
   List<Map<String, dynamic>> results = [];
@@ -46,6 +47,12 @@ class _SearchPageState extends State<SearchPage> {
   }
 ];
 
+final List<String> tipiSegnalazione = [
+    "Furto",
+    "Molestia Personale",
+    "Emergenza Silenziosa",
+    "Emergenza Medica"
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,73 +87,91 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
                     const SizedBox(height: 16),
+                                          LayoutBuilder(
+                        builder: (context, constraints) {
+                          final double w = constraints.maxWidth;
 
-                    Row(
-                      children: [
-                        _inputBox("Tipologia", tipologiaCtrl),
-                        const SizedBox(width: 20),
-
-                        /// Dropdown stato
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text("Stato", style: TextStyle(fontSize: 14)),
-                              const SizedBox(height: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(color: Colors.grey.shade400),
+                              /// TIPOLIGIA - 25%
+                              SizedBox(
+                                width: w * 0.25,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("Tipologia", style: TextStyle(fontSize: 14)),
+                                    const SizedBox(height: 6),
+                                    _dropdownBox(
+                                      value: tipologiaSelezionata,
+                                      hint: "Seleziona Tipologia",
+                                      items: const [
+                                        DropdownMenuItem(value: "Emergenza Medica", child: Text("Emergenza Medica")),
+                                        DropdownMenuItem(value: "Emergenza Silenziosa", child: Text("Emergenza Silenziosa")),
+                                        DropdownMenuItem(value: "Furto", child: Text("Furto")),
+                                        DropdownMenuItem(value: "Molestia Personale", child: Text("Molestia Personale")),
+                                      ],
+                                      onChanged: (v) => setState(() => tipologiaSelezionata = v),
+                                    ),
+                                  ],
                                 ),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    value: statoSelezionato,
-                                    hint: const Text("Seleziona stato"),
-                                    items: const [
-                                      DropdownMenuItem(value: "APERTA", child: Text("Aperta")),
-                                      DropdownMenuItem(value: "IN CORSO", child: Text("In corso")),
-                                      DropdownMenuItem(value: "CONCLUSA CON INTERVENTO", child: Text("Chiusa")),
-                                    ],
-                                    onChanged: (value) {
-                                      setState(() => statoSelezionato = value);
-                                    },
+                              ),
+
+                              const SizedBox(width: 16),
+
+                              /// STATO - 20%
+                              SizedBox(
+                                width: w * 0.20,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text("Stato", style: TextStyle(fontSize: 14)),
+                                    const SizedBox(height: 6),
+                                    _dropdownBox(
+                                      value: statoSelezionato,
+                                      hint: "Seleziona stato",
+                                      items: const [
+                                        DropdownMenuItem(value: "APERTA", child: Text("Aperta")),
+                                        DropdownMenuItem(value: "IN CORSO", child: Text("In corso")),
+                                        DropdownMenuItem(value: "CONCLUSA CON INTERVENTO", child: Text("Chiusa")),
+                                      ],
+                                      onChanged: (v) => setState(() => statoSelezionato = v),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const Spacer(),
+
+                              /// BOTTONI - dimensione fissa
+                              Row(
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: _performSearch,
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: const Color(0xFFD6001C),
+                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                    ),
+                                    child: const Text("Cerca", style: TextStyle(fontSize: 16, color: Colors.white)),
                                   ),
-                                ),
-                              ),
+
+                                  const SizedBox(width: 16),
+
+                                  OutlinedButton(
+                                    onPressed: _resetFilters,
+                                    style: OutlinedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                                      side: const BorderSide(color: Color(0xFFD6001C)),
+                                    ),
+                                    child: const Text("Reset", style: TextStyle(fontSize: 16, color: Color(0xFFD6001C))),
+                                  ),
+                                ],
+                              )
                             ],
-                          ),
-                        ),
-                        const SizedBox(width: 20),
+                          );
+                        },
+                      )
 
-                        /// Bottone Cerca
-                        Row(
-                          children: [
-                            /// Pulsante Cerca
-                            ElevatedButton(
-                              onPressed: _performSearch,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFD6001C),
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                              ),
-                              child: const Text("Cerca", style: TextStyle(fontSize: 16, color: Colors.white)),
-                            ),
-
-                            const SizedBox(width: 16),
-
-                            /// Pulsante Reset
-                            OutlinedButton(
-                              onPressed: _resetFilters,
-                              style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                                side: const BorderSide(color: Color(0xFFD6001C)),
-                              ),
-                              child: const Text("Reset", style: TextStyle(fontSize: 16, color: Color(0xFFD6001C))),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
@@ -206,9 +231,9 @@ void _resetFilters() {
   setState(() {
     codiceCtrl.clear();
     carrozzaCtrl.clear();
-    tipologiaCtrl.clear();
     apertaDaCtrl.clear();
     statoSelezionato = null;
+    tipologiaSelezionata = null;
 
     // Mostra tutte le segnalazioni
     results = List.from(allSegnalazioni);
@@ -278,9 +303,10 @@ void _resetFilters() {
         return false;
       }
 
-      if (tipologiaCtrl.text.isNotEmpty &&
-          !s["tipologia"].toString().toLowerCase().contains(tipologiaCtrl.text.toLowerCase())) {
-        return false;
+      if (tipologiaSelezionata != null && tipologiaSelezionata!.isNotEmpty) {
+        if (!s["tipologia"].toString().contains(tipologiaSelezionata!)) {
+          return false;
+        }
       }
 
       if (statoSelezionato != null && statoSelezionato!.isNotEmpty) {
@@ -293,5 +319,29 @@ void _resetFilters() {
     }).toList();
   });
 }
+
+Widget _dropdownBox({
+  required String? value,
+  required String hint,
+  required List<DropdownMenuItem<String>> items,
+  required ValueChanged<String?> onChanged,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      border: Border.all(color: Colors.grey.shade400),
+    ),
+    child: DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        value: value,
+        hint: Text(hint),
+        items: items,
+        onChanged: onChanged,
+      ),
+    ),
+  );
+}
+
 
 }

@@ -138,11 +138,11 @@ final NotificheService _notificheService = NotificheService();
                       // Stats row
                       Row(
                         children: [
-                          Expanded(child: StatCard(title: 'Segnalazioni \naperte', value: '${state.reports.where((r) => r.status.contains('Aperta')).length}', icon: Icons.report_problem, color: Colors.green)),
+                          Expanded(child: StatCard(title: 'Segnalazioni \naperte', value: '${state.reports.where((r) => r.status.contains('APERTA')).length}', icon: Icons.report_problem, color: Colors.green)),
                           const SizedBox(width: 12),
-                          Expanded(child: StatCard(title: 'Segnalazioni \nchiuse', value: '${state.reports.where((r) => r.status.contains('Chiusa') || r.status.contains('Risolta')).length}', icon: Icons.check_circle, color: Colors.red)),
+                          Expanded(child: StatCard(title: 'Segnalazioni \nchiuse', value: '${state.reports.where((r) => r.status.contains('CONCLUSA') || r.status.contains('Risolta')).length}', icon: Icons.check_circle, color: Colors.red)),
                           const SizedBox(width: 12),
-                          Expanded(child: StatCard(title: 'Segnalazioni \npending', value: '${state.reports.where((r) => r.status.contains('Pending')).length}', icon: Icons.access_time, color: Colors.orange)),
+                          Expanded(child: StatCard(title: 'Segnalazioni \npending', value: '${state.reports.where((r) => r.status.contains('IN CORSO')).length}', icon: Icons.access_time, color: Colors.orange)),
                           const SizedBox(width: 12),
                           Expanded(child: StatCard(title: 'Tempo medio \nrisposta', value: '12 min', icon: Icons.access_time, color: Colors.blue)),
                         ],
