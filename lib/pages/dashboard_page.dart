@@ -99,8 +99,11 @@ final NotificheService _notificheService = NotificheService();
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(user?.nominativo ?? '--', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          Text(state.currentUser?.area ?? '--', style: const TextStyle(color: Colors.black54)),
+                          // MODIFICA 1: Nome fisso richiesto
+                          const Text('Operatore 6060001 Security Control Room', 
+                              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                           // Manteniamo l'area dinamica o fissa se serve
+                          Text(state.currentUser?.area ?? 'FS Security', style: const TextStyle(color: Colors.black54)),
                         ],
                       )
                     ],
@@ -109,7 +112,8 @@ final NotificheService _notificheService = NotificheService();
                 ElevatedButton.icon(
                   onPressed: () => setState(() => state.startCall(state.currentUser?.nominativo ?? 'Personale')),
                   icon: const Icon(Icons.phone),
-                  label: const Text('Contatta Personale'),
+                  // MODIFICA 2: Label cambiata
+                  label: const Text('Personale attestato a bordo treno (Board Support)'),
                 ),
                 const SizedBox(width: 12),
                 ElevatedButton(
@@ -144,7 +148,7 @@ final NotificheService _notificheService = NotificheService();
                           const SizedBox(width: 12),
                           Expanded(child: StatCard(title: 'Segnalazioni \npending', value: '${state.reports.where((r) => r.status.contains('IN CORSO')).length}', icon: Icons.access_time, color: Colors.orange)),
                           const SizedBox(width: 12),
-                          Expanded(child: StatCard(title: 'Tempo medio \nrisposta', value: '12 min', icon: Icons.access_time, color: Colors.blue)),
+                          Expanded(child: StatCard(title: 'Tempo medio \nintervento', value: '5 min', icon: Icons.timer, color: Colors.blue)),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -266,13 +270,29 @@ final NotificheService _notificheService = NotificheService();
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12), boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8)]),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                          const Text('Personale Attestato', style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 8),
-                          Text(state.currentUser?.nominativo ?? '--', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                          const SizedBox(height: 6),
-                          Text(state.currentUser?.area ?? '--', style: const TextStyle(fontWeight: FontWeight.w600)),
+                          const Text('Personale Attestato a Bordo', style: TextStyle(fontSize: 12, color: Colors.black54, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 12),
-                          ElevatedButton(onPressed: () => setState(() => state.startCall(state.currentUser?.nominativo ?? 'Personale')), child: const Text('Contatta Personale'))
+                          // MODIFICA 4: Lista differenziata
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Personale FS Security', style: TextStyle(fontWeight: FontWeight.w600)),
+                              Text('2', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            ],
+                          ),
+                          const Divider(),
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Personale Polfer (Divisa)', style: TextStyle(fontWeight: FontWeight.w600)),
+                              Text('3', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton(
+                            onPressed: () => setState(() => state.startCall('Board Support')), 
+                            child: const Text('Contatta Board Support')
+                          )
                         ]),
                       ),
 

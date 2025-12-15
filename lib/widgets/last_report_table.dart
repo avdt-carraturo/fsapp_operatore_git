@@ -8,6 +8,29 @@ class LastReportsTable extends StatelessWidget {
 
   const LastReportsTable({super.key, required this.reports, this.onOpen});
 
+  Color _getBorderColor(Report r) {
+    // 1. Logica per utenti anonimi (senza dati/biglietto) -> VERDE
+    // Assumiamo che se l'utente è null, vuoto o "--", sia anonimo/senza biglietto
+    if (r.user == null || r.user.isEmpty || r.user == '--' || r.user == 'N/D') {
+      return Colors.green;
+    }
+
+    // 2. Priorità Alta -> ROSSO
+    final redTypes = ['Aggressione', 'Emergenza Medica', 'Molestia', 'Emergenza Silenziosa', 'Molestia Personale'];
+    if (redTypes.contains(r.type)) {
+      return Colors.red;
+    }
+
+    // 3. Priorità Media -> GIALLO (Uso Orange per leggibilità su sfondo bianco)
+    final yellowTypes = ['Furto', 'Comportamento intemperante'];
+    if (yellowTypes.contains(r.type)) {
+      return Colors.orange;
+    }
+
+    // Default
+    return Colors.grey;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
