@@ -18,10 +18,12 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
 final NotificheService _notificheService = NotificheService();
   StreamSubscription? _segnalazioniSub;
+  late final Timestamp _dataOraAperturaCheck;
 
   @override
   void initState() {
     super.initState();
+    _dataOraAperturaCheck = Timestamp.now();
     _listenSegnalazioni();
   }
 
@@ -34,6 +36,9 @@ final NotificheService _notificheService = NotificheService();
   void _listenSegnalazioni() {
   _segnalazioniSub = FirebaseFirestore.instance
       .collection("segnalazioni")
+      .orderBy('dataOraApertura', descending: true)
+      .limit(1)
+
       .snapshots()
       .listen((snapshot) {
     for (var docChange in snapshot.docChanges) {
@@ -54,14 +59,52 @@ final NotificheService _notificheService = NotificheService();
         final titolo = trenoMap?["codice"] ?? "Nuova segnalazione";
         final descrizione = data["tipo"] ?? "Clicca per aprire";
 
-        _notificheService.showNotification(
-          title: titolo,
-          body: descrizione,
-        );
+        if (docChange.type == DocumentChangeType.added) {
+                _showSegnalazioneModal(docChange.doc);
+        }
       }
     }
   });
 }
+
+void _showSegnalazioneModal(DocumentSnapshot<Map<String, dynamic>> doc) {
+  final data = doc.data();
+  if (data == null) return;
+
+  final treno = data['treno']?['codice'] ?? '--';
+  final tipo = data['tipo'] ?? '--';
+  final utente = data['apertaDa']?['nominativo'];
+  final dataOraAperturaSegnalazione = data['dataOraApertura'] ?? '--';
+  final carrozzaSegnalazione = data['carrozza'] ?? '--';
+
+  if (!mounted) return;
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => AlertDialog(
+      title: const Text('🚨 Nuova Segnalazione'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Tipo: $tipo'),
+          Text('Treno: $treno'),
+          Text('Carrozza: $carrozzaSegnalazione'),
+          Text('Utente: $utente'),
+          Text('Apertura: $dataOraAperturaSegnalazione')
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Chiudi'),
+        ),
+      ],
+    ),
+  );
+}
+
 
 
   
