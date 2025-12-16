@@ -6,6 +6,13 @@ import '../widgets/last_report_table.dart';
 import 'package:fsapp_shared/services/notification_firestore_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'dart:io' as io;
+import 'dart:convert';
+import 'dart:typed_data';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'dart:html' as html;
+import 'package:flutter/foundation.dart';
 
 class DashboardPage extends StatefulWidget {
   final AppState appState;
@@ -67,15 +74,29 @@ final NotificheService _notificheService = NotificheService();
   });
 }
 
+void downloadBase64File(String base64, String fileName) {
+  final bytes = base64Decode(base64);
+  final blob = html.Blob([bytes]);
+  final url = html.Url.createObjectUrlFromBlob(blob);
+  final anchor = html.AnchorElement(href: url)
+    ..setAttribute("download", fileName)
+    ..click();
+  html.Url.revokeObjectUrl(url);
+}
+
+
 void _showSegnalazioneModal(DocumentSnapshot<Map<String, dynamic>> doc) {
   final data = doc.data();
   if (data == null) return;
 
   final treno = data['treno']?['codice'] ?? '--';
   final tipo = data['tipo'] ?? '--';
-  final utente = data['apertaDa']?['nominativo'];
+  final utente = data['apertaDa']?['nominativo'] ?? '--';
   final dataOraAperturaSegnalazione = data['dataOraApertura'] ?? '--';
   final carrozzaSegnalazione = data['carrozza'] ?? '--';
+
+  final hasFile = (data['mediaUrl'] ?? "").isNotEmpty;
+  final fileName = data['mediaFileName'] ?? "";
 
   if (!mounted) return;
 
@@ -84,16 +105,53 @@ void _showSegnalazioneModal(DocumentSnapshot<Map<String, dynamic>> doc) {
     barrierDismissible: false,
     builder: (_) => AlertDialog(
       title: const Text('🚨 Nuova Segnalazione'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Tipo: $tipo'),
-          Text('Treno: $treno'),
-          Text('Carrozza: $carrozzaSegnalazione'),
-          Text('Utente: $utente'),
-          Text('Apertura: $dataOraAperturaSegnalazione')
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Tipo: $tipo'),
+            Text('Treno: $treno'),
+            Text('Carrozza: $carrozzaSegnalazione'),
+            Text('Utente: $utente'),
+            Text('Apertura: $dataOraAperturaSegnalazione'),
+            const SizedBox(height: 10),
+            if (hasFile)
+              ElevatedButton.icon(
+                onPressed: () async {
+  try {
+    final base64Str = data['mediaUrl'];
+    if (kIsWeb) {
+      // Web: usa anchor download
+      final bytes = base64Decode(base64Str);
+      final blob = html.Blob([bytes]);
+      final url = html.Url.createObjectUrlFromBlob(blob);
+      final anchor = html.AnchorElement(href: url)
+        ..setAttribute("download", fileName)
+        ..click();
+      html.Url.revokeObjectUrl(url);
+    } else {
+      // Mobile: salva temporaneamente e apri
+      Uint8List fileBytes = base64Decode(base64Str);
+      final tempDir = await getTemporaryDirectory();
+      final filePath = '${tempDir.path}/allegato_${data['idNotifica']}';
+      final file = await io.File(filePath).writeAsBytes(fileBytes);
+      await OpenFile.open(file.path);
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Errore download file: $e')),
+    );
+  }
+},
+
+                icon: const Icon(Icons.download),
+                label: const Text('Scarica allegato'),
+              )
+            else
+              const Text('Nessun file allegato'),
+          ],
+        ),
       ),
       actions: [
         TextButton(

@@ -8,7 +8,7 @@ class OperatorHomePageApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Operatore POLFER App',
+      title: 'Operatore App',
       debugShowCheckedModeBanner: false,
       home: LoginPage(
         authService: MockAuthService(),
